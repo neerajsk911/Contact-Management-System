@@ -10,8 +10,11 @@
 
 - ***Entity Relation Diagram***
 
-![Use case Diagram](res/UML/SE_ERD_ECMS.png "Use Case Diagram")
+![ER Diagram](res/UML/SE_ERD_ECMS.png "Use Case Diagram")
 
+- ***Class Diagram***
+
+![Class Diagram](res/UML/class_diagram.png "Class Diagram")
 
 ## ***User Stories***
 - *Employee (Regular User) should be able to Insert, Update his details.*
