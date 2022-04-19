@@ -2,7 +2,7 @@ from tkinter import *
 import sqlite3
 import tkinter.ttk as ttk
 import tkinter.messagebox as tkMessageBox
-
+import os
 
 root = Tk()
 root.title("Contact List")
@@ -85,7 +85,8 @@ def UpdateData():
         NewWindow.destroy()
         tkMessageBox.showinfo('Update Records', 'Record has been updated!', icon="info")
 def SalaryData():
-    import salary
+    os.system("python salary.py")
+    
     
 def OnSelected(event):
     global mem_id, UpdateWindow
@@ -179,7 +180,7 @@ def DeleteData():
             conn.commit()
             cursor.close()
             conn.close()
-    # 
+
 def AddNewWindow():
     global NewWindow
     FIRSTNAME.set("")
