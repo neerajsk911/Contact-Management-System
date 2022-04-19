@@ -23,22 +23,20 @@ AGE = StringVar()
 ADDRESS = StringVar()
 CONTACT = StringVar()
 
-
-
 #============================METHODS=====================================
 
 def Database():
     conn = sqlite3.connect("pythontut.db")
     cursor = conn.cursor()
     cursor.execute("CREATE TABLE IF NOT EXISTS `member` (mem_id INTEGER NOT NULL  PRIMARY KEY AUTOINCREMENT, firstname TEXT, lastname TEXT, gender TEXT, age TEXT, address TEXT, contact TEXT)")
-    cursor.execute("SELECT * FROM `member` ORDER BY `lastname` ASC")
+    cursor.execute("SELECT * FROM `member` ORDER BY `mem_id` ASC")
     fetch = cursor.fetchall()
     for data in fetch:
         tree.insert('', 'end', values=(data))
     cursor.close()
     conn.close()
 
-def  SubmitData():
+def SubmitData():
     if  FIRSTNAME.get() == "" or LASTNAME.get() == "" or GENDER.get() == "" or AGE.get() == "" or ADDRESS.get() == "" or CONTACT.get() == "":
         result = tkMessageBox.showwarning('', 'Please Complete The Required Field', icon="warning")
     else:
@@ -60,7 +58,6 @@ def  SubmitData():
         ADDRESS.set("")
         CONTACT.set("")
         tkMessageBox.showinfo('Add Records', 'Record has been added!', icon="info")
-
 
 def UpdateData():
     global mem_id
@@ -177,7 +174,7 @@ def DeleteData():
             conn.commit()
             cursor.close()
             conn.close()
-    
+    # 
 def AddNewWindow():
     global NewWindow
     FIRSTNAME.set("")
@@ -319,10 +316,80 @@ def UpdateExistingWindow():
         btn_addcon.grid(row=6, columnspan=2, pady=10)
 
 def SearchData():
-    pass
+    if FIRSTNAME.get() == "":
+       result = tkMessageBox.showwarning('Searching Name Error', 'Enter a valid name!', icon="warning")
+    else:
+        conn = sqlite3.connect("pythontut.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM `member` WHERE `firstname`= ?",(str(FIRSTNAME.get()),))
+        fetch = cursor.fetchall()
+        if len(fetch) > 0:
+            result=f"Found {len(fetch)} Records!\n"
+            for data in fetch:
+                mem_id=data[0]
+                fn=data[1]
+                ln=data[2]
+                gender=data[3]
+                age=data[4]
+                address=data[5]
+                contact=data[6]
+                result+=f"""
+MemberID\t: {mem_id}
+Firstname\t: {fn}
+Lastname\t: {ln}
+Gender\t\t: {gender}
+Age\t\t: {age}
+Address\t\t: {address}
+Contact\t\t: {contact}
+                """
+            tkMessageBox.showinfo('Search Records', result, icon="info")
+        else:
+            tkMessageBox.showinfo('Search Record', 'No Records Found!', icon="warning")
+
+            
 
 def SearchWindow():
-    pass
+    global NewWindow
+    
+    NewWindow = Toplevel()
+    NewWindow.title("Contact List")
+    width = 400
+    height = 300
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    x = ((screen_width/2) - 455) - (width/2)
+    y = ((screen_height/2) + 20) - (height/2)
+    NewWindow.resizable(0, 0)
+    NewWindow.geometry("%dx%d+%d+%d" % (width, height, x, y))
+    if 'UpdateWindow' in globals():
+        UpdateWindow.destroy()
+
+    #===================FRAMES==============================
+    FormTitle = Frame(NewWindow)
+    FormTitle.pack(side=TOP)
+    ContactForm = Frame(NewWindow)
+    ContactForm.pack(side=TOP, pady=10)
+    RadioGroup = Frame(ContactForm)
+    Male = Radiobutton(RadioGroup, text="Male", variable=GENDER, value="Male",  font=('arial', 14)).pack(side=LEFT)
+    Female = Radiobutton(RadioGroup, text="Female", variable=GENDER, value="Female",  font=('arial', 14)).pack(side=LEFT)
+
+
+    #===================LABELS==============================
+    lbl_title = Label(FormTitle, text="Search by First Name", font=('arial', 16), bg="#66ff66",  width = 300)
+    lbl_title.pack(fill=X)
+    lbl_firstname = Label(ContactForm, text="Firstname", font=('arial', 14), bd=5)
+    lbl_firstname.grid(row=0, sticky=W)
+
+
+    #===================ENTRY===============================
+    firstname = Entry(ContactForm, textvariable=FIRSTNAME, font=('arial', 14))
+    firstname.grid(row=0, column=1)
+
+
+    #==================BUTTONS==============================
+    btn_addcon = Button(ContactForm, text="Search Name", width=50, command=SearchData)
+    btn_addcon.grid(row=6, columnspan=2, pady=10)
+
 
 #============================FRAMES======================================
 Top = Frame(root, width=500, bd=1, relief=SOLID)
@@ -355,7 +422,7 @@ btn_add = Button(MidLeft, text="+ ADD NEW", bg="#66ff66", command=AddNewWindow)
 btn_add.pack()
 btn_update = Button(MidCenter, text="+/- UPDATE", bg="yellow", command=UpdateExistingWindow)
 btn_update.pack()
-btn_search = Button(MidCenterSearch, text="? SEARCH", bg="cyan", command=SearchData)
+btn_search = Button(MidCenterSearch, text="? SEARCH", bg="cyan", command=SearchWindow)
 btn_search.pack()
 btn_delete = Button(MidRight, text="-DELETE", bg="red", command=DeleteData)
 btn_delete.pack(side=RIGHT)
