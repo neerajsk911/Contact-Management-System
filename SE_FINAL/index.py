@@ -3,10 +3,11 @@ import sqlite3
 import tkinter.ttk as ttk
 import tkinter.messagebox as tkMessageBox
 
+
 root = Tk()
 root.title("Contact List")
-width = 700
-height = 400
+width = 1350
+height = 650
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 x = (screen_width/2) - (width/2)
@@ -86,6 +87,8 @@ def UpdateData():
         CONTACT.set("")
         NewWindow.destroy()
         tkMessageBox.showinfo('Update Records', 'Record has been updated!', icon="info")
+def SalaryData():
+    import salary
     
 def OnSelected(event):
     global mem_id, UpdateWindow
@@ -159,6 +162,8 @@ def OnSelected(event):
     #==================BUTTONS==============================
     btn_updatecon = Button(ContactForm, text="Update", width=50, command=UpdateData)
     btn_updatecon.grid(row=6, columnspan=2, pady=10)
+    btn_salarycon = Button(ContactForm, text="Salary", width=50, command=SalaryData)
+    btn_salarycon.grid(row=6, columnspan=2, pady=10)
 
 #fn1353p    
 def DeleteData():
@@ -342,6 +347,8 @@ MidCenterSearch.pack(side=LEFT,padx=10)
 
 MidRight = Frame(Mid, width=100)
 MidRight.pack(side=RIGHT, pady=10)
+MidRights = Frame(Mid, width=100)
+MidRights.pack(side=LEFT, padx=10)
 TableMargin = Frame(root, width=500)
 TableMargin.pack(side=TOP)
 #============================LABELS======================================
@@ -359,6 +366,8 @@ btn_search = Button(MidCenterSearch, text="? SEARCH", bg="cyan", command=SearchD
 btn_search.pack()
 btn_delete = Button(MidRight, text="-DELETE", bg="red", command=DeleteData)
 btn_delete.pack(side=RIGHT)
+btn_salary = Button(MidRights, text="$ SALARY", bg="blue", command=SalaryData)
+btn_salary.pack(side=RIGHT)
 
 #============================TABLES======================================
 scrollbarx = Scrollbar(TableMargin, orient=HORIZONTAL)
